@@ -15,36 +15,36 @@ public @interface CheckPermission {
 	 * 数据库表名称
 	 * @return
 	 */
-	String tableName();
+	String tableName() default "";
 
 	/**
 	 * 字段名称
 	 * @return
 	 */
-	String[] fieldNames();
+	String[] fieldNames() default "";
 
 	/**
 	 * 字段值
 	 * @return
 	 */
-	String[] fieldValues();
+	String[] fieldValues() default "";
 
 	/**
 	 * 查询的字段
 	 * @return
 	 */
-	String[] queryFields();
+	String[] queryFields() default "";
 
 	/**
 	 * 查询条件
 	 * @return
 	 */
-	String[] queryParams();
+	String[] queryValues() default "";
 
 	/**
 	 * 是否是登陆人的
 	 * @return
 	 */
-	boolean isLoginUser();
+	boolean isLoginUser() default false;
 
 }

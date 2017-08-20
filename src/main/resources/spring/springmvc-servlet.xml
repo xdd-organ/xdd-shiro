@@ -6,7 +6,6 @@
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:websocket="http://www.springframework.org/schema/websocket"
-	xmlns:redis="http://www.springframework.org/schema/redis"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 		http://www.springframework.org/schema/context 
@@ -18,7 +17,7 @@
 		http://www.springframework.org/schema/websocket
 		http://www.springframework.org/schema/websocket/spring-websocket.xsd">
 
-	<context:component-scan base-package="com.java.xdd.*.controller" />
+	<context:component-scan base-package="com.java.xdd.*" />
 
 	<mvc:annotation-driven/>
 

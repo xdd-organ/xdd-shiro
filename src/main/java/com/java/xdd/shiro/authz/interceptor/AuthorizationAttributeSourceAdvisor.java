@@ -1,5 +1,6 @@
 package com.java.xdd.shiro.authz.interceptor;
 
+import com.java.xdd.shiro.authz.annotation.CheckPermission;
 import com.java.xdd.shiro.authz.annotation.RequiresData;
 import org.apache.shiro.authz.annotation.*;
 import org.apache.shiro.mgt.SecurityManager;
@@ -22,7 +23,7 @@ public class AuthorizationAttributeSourceAdvisor extends StaticMethodMatcherPoin
             new Class[] {
                     RequiresPermissions.class, RequiresRoles.class,
                     RequiresUser.class, RequiresGuest.class, RequiresAuthentication.class,
-                    RequiresData.class
+                    RequiresData.class, CheckPermission.class
             };
 
     protected SecurityManager securityManager = null;
@@ -31,7 +32,7 @@ public class AuthorizationAttributeSourceAdvisor extends StaticMethodMatcherPoin
      * Create a new AuthorizationAttributeSourceAdvisor.
      */
     public AuthorizationAttributeSourceAdvisor() {
-        setAdvice(new AopAllianceAnnotationsAuthorizingMethodInterceptor());
+        //setAdvice(new AopAllianceAnnotationsAuthorizingMethodInterceptor());
     }
 
     public SecurityManager getSecurityManager() {

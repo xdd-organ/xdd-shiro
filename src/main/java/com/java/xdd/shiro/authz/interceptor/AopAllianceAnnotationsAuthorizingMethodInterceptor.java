@@ -10,13 +10,17 @@ public class AopAllianceAnnotationsAuthorizingMethodInterceptor
 extends org.apache.shiro.spring.security.interceptor.AopAllianceAnnotationsAuthorizingMethodInterceptor {
 
 	public AopAllianceAnnotationsAuthorizingMethodInterceptor(){
-		super();
-		this.methodInterceptors.add(new DataAnnotationMethodInterceptor(new SpringAnnotationResolver()));
-		
+//		super();
+//		this.methodInterceptors.add(new DataAnnotationMethodInterceptor(new SpringAnnotationResolver()));
+//		this.methodInterceptors.add(new CheckPermissionAnnotationMethodInterceptor(new SpringAnnotationResolver()));
 	}
-	
-	
-	@Override
+
+    @Override
+    public void setMethodInterceptors(Collection<AuthorizingAnnotationMethodInterceptor> methodInterceptors) {
+        super.setMethodInterceptors(methodInterceptors);
+    }
+
+    @Override
 	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
         org.apache.shiro.aop.MethodInvocation mi = createMethodInvocation(methodInvocation);
         assertAuthorized(mi);
@@ -29,8 +33,10 @@ extends org.apache.shiro.spring.security.interceptor.AopAllianceAnnotationsAutho
                 	if(aami instanceof DataAnnotationMethodInterceptor) {
                 		return ((DataAnnotationMethodInterceptor)aami).invoke(mi);
                 	}
-                	
-                } 
+                    if(aami instanceof CheckPermissionAnnotationMethodInterceptor) {
+                		return ((CheckPermissionAnnotationMethodInterceptor)aami).invoke(mi);
+                	}
+                }
             }
         }
         

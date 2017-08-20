@@ -4,6 +4,7 @@ import com.java.xdd.shiro.pojo.Permission;
 import com.java.xdd.shiro.pojo.Role;
 import com.java.xdd.shiro.pojo.User;
 import com.java.xdd.shiro.service.UserService;
+import com.java.xdd.shiro.service.impl.CheckPermissionServiceImpl;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -30,6 +31,8 @@ public class CustomRealm extends AuthorizingRealm {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private UserService userService;
+    @Autowired
+    private CheckPermissionServiceImpl checkPermissionService;
 
     @Override
     public void setName(String name) {

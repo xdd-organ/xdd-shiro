@@ -1,5 +1,6 @@
 package com.java.xdd.shiro.controller;
 
+import com.java.xdd.shiro.authz.annotation.CheckPermission;
 import com.java.xdd.shiro.pojo.User;
 import com.java.xdd.shiro.exception.CustomException;
 import com.java.xdd.shiro.service.UserService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,4 +57,21 @@ public class LoginController {
         return "login";
     }
 
+    @RequestMapping(value = "unauthorized")
+    public String unauthorized() {
+        return "unauthorized";
+    }
+
+    @RequestMapping(value = "test")
+    @ResponseBody
+    public String test() {
+        return "test";
+    }
+    @RequestMapping(value = "test2")
+    @ResponseBody
+    @CheckPermission(tableName = "abc", fieldNames = {"1","2"}, fieldValues = {"9","8"}
+                        , queryFields = {"id"}, queryValues = {"1"})
+    public String test2() {
+        return "test2";
+    }
 }

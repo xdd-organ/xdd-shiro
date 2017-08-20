@@ -6,4 +6,13 @@
             select last_insert_id()
         </selectKey>
     </insert>
+
+    <select id="getUserByUsername" resultType="com.java.xdd.shiro.pojo.User">
+        SELECT
+            *
+        from
+            user
+        where
+            username = #{value}
+    </select>
 </mapper>

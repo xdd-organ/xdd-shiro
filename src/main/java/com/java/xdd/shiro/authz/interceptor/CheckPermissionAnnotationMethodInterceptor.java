@@ -5,11 +5,15 @@ import com.java.xdd.shiro.authz.annotation.RequiresData;
 import com.java.xdd.shiro.authz.domain.DataParameterRequest;
 import com.java.xdd.shiro.authz.handler.CheckPermissionAnnotationHandler;
 import com.java.xdd.shiro.authz.handler.DataAnnotationHandler;
+import com.java.xdd.shiro.service.CheckPermissionService;
+import org.apache.shiro.aop.AnnotationHandler;
 import org.apache.shiro.aop.AnnotationResolver;
 import org.apache.shiro.aop.MethodInvocation;
 import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.authz.aop.AuthorizingAnnotationHandler;
 import org.apache.shiro.authz.aop.AuthorizingAnnotationMethodInterceptor;
 import org.apache.shiro.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -22,11 +26,17 @@ import java.util.Map;
 public class CheckPermissionAnnotationMethodInterceptor
         extends AuthorizingAnnotationMethodInterceptor {
 
-    public CheckPermissionAnnotationMethodInterceptor(){
-        super(new DataAnnotationHandler());
+    @Autowired
+    private CheckPermissionService checkPermissionService;
+
+    private AuthorizingAnnotationHandler handler;
+
+    public CheckPermissionAnnotationMethodInterceptor(AuthorizingAnnotationHandler handler){
+        //super(new CheckPermissionAnnotationHandler());
+        super(handler);
     }
-    public CheckPermissionAnnotationMethodInterceptor(AnnotationResolver resolver){
-        super(new CheckPermissionAnnotationHandler(),resolver);
+    public CheckPermissionAnnotationMethodInterceptor(AuthorizingAnnotationHandler handler, AnnotationResolver resolver){
+        super(handler, resolver);
     }
 
 
@@ -37,6 +47,7 @@ public class CheckPermissionAnnotationMethodInterceptor
             CheckPermissionAnnotationHandler handler = (CheckPermissionAnnotationHandler) getHandler();
             handler.assertAuthorized(this.getAnnotation(mi));
         } catch(AuthorizationException ae) {
+            ae.printStackTrace();
             // Annotation handler doesn't know why it was called, so add the information here if possible.
             // Don't wrap the exception here since we don't want to mask the specific exception, such as
             // UnauthenticatedException etc.

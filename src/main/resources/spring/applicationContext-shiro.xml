@@ -1,9 +1,14 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
 			http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-4.0.xsd
 			">
+
+	<context:component-scan base-package="com.java.xdd" />
 
 	<!-- web.xml中shiro的filter对应的bean -->
 	<!-- Shiro 的Web过滤器 -->
@@ -14,7 +19,7 @@
 		<!-- 认证成功统一跳转到first.action，建议不配置，shiro认证成功自动到上一个请求路径 -->
 		<!--<property name="successUrl" value="/websocket/toWebsocket"/>-->
 		<!-- 通过unauthorizedUrl指定没有权限操作时跳转页面-->
-        <!--<property name="unauthorizedUrl" value="/websocket/mySocketTest10" />-->
+        <property name="unauthorizedUrl" value="/unauthorized" />
 		<!-- 自定义filter配置 -->
 		<property name="filters">
 			<map>
@@ -123,13 +128,48 @@
 
     <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
     <!-- 支持@RequiresRoles与@RequiresPermissions注解:开始 -->
-    <!--<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
     <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
         <property name="proxyTargetClass" value="true" />
     </bean>
     <bean class="com.java.xdd.shiro.authz.interceptor.AuthorizationAttributeSourceAdvisor">
         <property name="securityManager" ref="securityManager"/>
-    </bean>-->
+		<property name="advice">
+			<bean class="com.java.xdd.shiro.authz.interceptor.AopAllianceAnnotationsAuthorizingMethodInterceptor">
+				<property name="methodInterceptors">
+					<list>
+						<bean class="org.apache.shiro.authz.aop.RoleAnnotationMethodInterceptor">
+							<constructor-arg index="0" ref="resolver"/>
+						</bean>
+						<bean class="org.apache.shiro.authz.aop.PermissionAnnotationMethodInterceptor">
+							<constructor-arg index="0" ref="resolver"/>
+						</bean>
+						<bean class="org.apache.shiro.authz.aop.AuthenticatedAnnotationMethodInterceptor">
+							<constructor-arg index="0" ref="resolver"/>
+						</bean>
+						<bean class="org.apache.shiro.authz.aop.UserAnnotationMethodInterceptor">
+							<constructor-arg index="0" ref="resolver"/>
+						</bean>
+						<bean class="org.apache.shiro.authz.aop.GuestAnnotationMethodInterceptor">
+							<constructor-arg index="0" ref="resolver"/>
+						</bean>
+						<bean class="com.java.xdd.shiro.authz.interceptor.DataAnnotationMethodInterceptor">
+							<constructor-arg index="0" ref="resolver"/>
+						</bean>
+						<ref bean="checkPermissionInterceptor"/>
+					</list>
+				</property>
+			</bean>
+		</property>
+    </bean>
+	<bean id="resolver" class="org.apache.shiro.spring.aop.SpringAnnotationResolver"/>
+	<bean id="checkPermissionInterceptor" class="com.java.xdd.shiro.authz.interceptor.CheckPermissionAnnotationMethodInterceptor">
+		<constructor-arg index="0" ref="checkPermissionHandler"/>
+		<constructor-arg index="1" ref="resolver"/>
+	</bean>
+	<bean id="checkPermissionHandler" class="com.java.xdd.shiro.authz.handler.CheckPermissionAnnotationHandler">
+		<!--<constructor-arg index="0" type="java.lang.Class" value="com.java.xdd.shiro.authz.annotation.CheckPermission"/>-->
+	</bean>
     <!-- 支持@RequiresRoles与@RequiresPermissions注解:结束 -->
 
     <!-- springMVC全局的异常处理机制:开始 -->
