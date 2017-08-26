@@ -58,4 +58,14 @@ public class User implements java.io.Serializable{
     public int hashCode() {
         return username.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", salt='" + salt + '\'' +
+                '}';
+    }
 }

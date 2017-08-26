@@ -113,13 +113,21 @@ public class CustomCookieRememberMeManager extends CookieRememberMeManager{
 
         Cookie template = getCookie(); //the class attribute is really a template for the outgoing cookies
         Cookie cookie = new SimpleCookie(template);
-        cookie.setValue(base64);
-        cookie.saveTo(request, response);
+        //cookie.setValue(base64);
+        //cookie.saveTo(request, response);
 
         Cookie cookie2 = new SimpleCookie(template);
+        Object principal = subject.getPrincipal();
+        User user = null;
+        if (principal != null) {
+            user = (User) principal;
+        }
+        System.out.println(principal);
         cookie2.setName("abc");
-        cookie2.setValue("12345678987654321");
+        cookie2.setValue(user.getUsername());
         cookie2.saveTo(request, response);
+        this.cookie.setValue(user.getUsername() + "|||||||||" + user.getId());
+        this.cookie.saveTo(request, response);
     }
 
     /**
@@ -149,9 +157,37 @@ public class CustomCookieRememberMeManager extends CookieRememberMeManager{
             }
 
             // 构造一个不为空的SimplePrincipalCollection地对象，则系统判定用户已登录(测试)：开始
-            User user = new User();
-            user.setPassword("jflsdjf");
-            principals = new SimplePrincipalCollection(user, "customRealm");
+//            User user = new User();
+//            user.setPassword("jflsdjf");
+//            principals = new SimplePrincipalCollection(user, "customRealm");
+
+            WebSubjectContext wsc = (WebSubjectContext) subjectContext;
+            HttpServletRequest request = WebUtils.getHttpRequest(wsc);
+            HttpServletResponse response = WebUtils.getHttpResponse(wsc);
+            javax.servlet.http.Cookie[] cookies = request.getCookies();
+
+            if (cookies != null && cookies.length > 0) {
+                for (javax.servlet.http.Cookie cookie1 : cookies) {
+                    if ("abc".equals(cookie1.getName()) && "admin".equals(cookie1.getValue())) {
+                        User user = new User();
+                        user.setUsername(cookie1.getName());
+                        principals = new SimplePrincipalCollection(user, "customRealm");
+                        return principals;
+                    }
+                }
+            }
+
+
+            Subject subject = subjectContext.getSubject();
+            if (subject != null) {
+                Object principal = subject.getPrincipal();
+                System.out.println(principal);
+                if (principal != null) {
+                    principals = new SimplePrincipalCollection(principal, "customRealm");
+                }
+            }
+
+
             // 构造一个不为空的SimplePrincipalCollection地对象，则系统判定用户已登录(测试)：结束
         } catch (RuntimeException var4) {
             principals = this.onRememberedPrincipalFailure(var4, subjectContext);
