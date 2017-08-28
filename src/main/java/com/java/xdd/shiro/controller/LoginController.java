@@ -69,8 +69,8 @@ public class LoginController {
     }
     @RequestMapping(value = "test2")
     @ResponseBody
-    @CheckPermission(tableName = "abc", fieldNames = {"1","2"}, fieldValues = {"9","8"}
-                        , queryFields = {"id"}, queryValues = {"1"})
+    @CheckPermission(tableName = "abc", fieldNames = {"value"}, fieldValues = {"value"}
+                        , queryFields = {"id", "name"}, queryValues = {"1", "admin"})
     public String test2() {
         return "test2";
     }
