@@ -1,9 +1,11 @@
 package com.java.xdd.shiro.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.java.xdd.shiro.authz.annotation.CheckPermission;
 import com.java.xdd.shiro.pojo.User;
 import com.java.xdd.shiro.exception.CustomException;
 import com.java.xdd.shiro.service.UserService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +67,8 @@ public class LoginController {
     @RequestMapping(value = "test")
     @ResponseBody
     public String test() {
-        return "test";
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+        return JSONObject.toJSONString(principal);
     }
     @RequestMapping(value = "test2")
     @ResponseBody

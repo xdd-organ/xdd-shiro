@@ -26,7 +26,7 @@
 				<!-- 将自定义 的FormAuthenticationFilter注入shiroFilter中-->
 				<entry key="authc" value-ref="formAuthenticationFilter" />
                 <!-- 运行最多几人登录 -->
-                <!--<entry key="kickout" value-ref="kickoutSessionControlFilter"/>-->
+                <entry key="kickout" value-ref="kickoutSessionControlFilter"/>
                 <!--<entry key="recoverSession" value-ref="recoverSession" />-->
             </map>
 		</property>
@@ -40,8 +40,10 @@
 				<!-- /** = authc 所有url都必须认证通过才可以访问-->
 				<!--二维码相关-->
 				/static/** = anon
-				/** = authc
-                /login = authc
+				/login = authc
+				/** = user,kickout
+				<!--/** = authc,kickout-->
+                <!--/login = authc,kickout-->
                 <!--/** = user,recoverSession-->
 				<!-- /** = anon所有url都可以匿名访问 -->
 
@@ -58,7 +60,7 @@
 		<!-- 注入session管理器 -->
 		<property name="sessionManager" ref="sessionManager" />
 		<!-- 记住我 -->
-		<!--<property name="rememberMeManager" ref="rememberMeManager"/>-->
+		<property name="rememberMeManager" ref="rememberMeManager"/>
 	</bean>
 
 	<!-- realm -->
@@ -75,9 +77,9 @@
 
 
 	<!-- 缓存管理器 -->
-	<!--<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
 		<property name="cacheManagerConfigFile" value="classpath:shiro-ehcache.xml"/>
-	</bean>-->
+	</bean>
 
     <!-- 会话管理器 -->
     <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
@@ -106,9 +108,9 @@
 	<!--<bean id="recoverSession" class="com.java.xdd.shiro.filter.AddPrincipalToSessionFilter"/>-->
 
     <!-- rememberMeManager管理器，写cookie，取出cookie生成用户信息 -->
-    <!--<bean id="rememberMeManager" class="com.java.xdd.shiro.manager.CustomCookieRememberMeManager">-->
-        <!--<property name="cookie" ref="rememberMeCookie"/>-->
-    <!--</bean>-->
+    <bean id="rememberMeManager" class="com.java.xdd.shiro.manager.CustomCookieRememberMeManager">
+        <property name="cookie" ref="rememberMeCookie"/>
+    </bean>
     <!-- 记住我cookie -->
     <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
         <!-- rememberMe是cookie的名字 -->
@@ -118,13 +120,13 @@
     </bean>
 
     <!-- 踢出用户 -->
-    <!--<bean id="kickoutSessionControlFilter" class="com.java.xdd.shiro.filter.KickoutSessionControlFilter">
+    <bean id="kickoutSessionControlFilter" class="com.java.xdd.shiro.filter.KickoutSessionControlFilter">
         <property name="cacheManager" ref="cacheManager"/>
         <property name="sessionManager" ref="sessionManager"/>
-        <property name="kickoutAfter" value="false"/>
+        <property name="kickoutAfter" value="true"/>
         <property name="maxSession" value="1"/>
         <property name="kickoutUrl" value="/login"/>
-    </bean>-->
+    </bean>
 
     <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
     <!-- 支持@RequiresRoles与@RequiresPermissions注解:开始 -->
