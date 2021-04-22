@@ -38,7 +38,7 @@
         <shiro.version>1.2.3</shiro.version>
         <aspectj.version>1.7.4</aspectj.version>
         <alibaba.dataSource.version>0.2.26</alibaba.dataSource.version>
-        <mybatis.version>3.2.8</mybatis.version>
+        <mybatis.version>3.5.6</mybatis.version>
         <mybatis.spring.version>1.2.3</mybatis.spring.version>
         <freemarker.version>2.3.23</freemarker.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
