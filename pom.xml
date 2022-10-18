@@ -30,7 +30,7 @@
 
     <properties>
         <spring.version>4.3.2.RELEASE</spring.version>
-        <fasterxml.version>2.5.1</fasterxml.version>
+        <fasterxml.version>2.13.4</fasterxml.version>
         <shiro.version>1.2.3</shiro.version>
         <lof4j.api.version>1.7.7</lof4j.api.version>
         <junit.version>4.12</junit.version>
